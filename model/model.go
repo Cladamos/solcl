@@ -38,7 +38,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) View() tea.View {
-	orbit := lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render(ui.DrawOrbit(m.width, m.height))
+	orbit := ui.DrawOrbit()
 	centeredOrbit := lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, orbit)
 	v := tea.NewView(centeredOrbit)
 	v.AltScreen = true
