@@ -25,13 +25,12 @@ var planetDistances = []float64{
 var yCompression = 0.55
 
 // Norman scale is 100x(100*(yCompression))
-var brailleScale = 0.8
 
-func DrawOrbit() string {
+func DrawOrbit(scale float64) string {
 	canvas := drawille.NewCanvas()
 	furthestPlanet := planetDistances[len(planetDistances)-1]
-	width := int(furthestPlanet * brailleScale * 2)
-	height := int(furthestPlanet * yCompression * brailleScale * 2)
+	width := int(furthestPlanet * scale * 2)
+	height := int(furthestPlanet * yCompression * scale * 2)
 
 	// All sides
 	terminalPadding := 2
@@ -42,8 +41,8 @@ func DrawOrbit() string {
 	thetaStep := 0.005
 
 	for _, p := range planetDistances {
-		radiusX := p * brailleScale
-		radiusY := p * yCompression * brailleScale
+		radiusX := p * scale
+		radiusY := p * yCompression * scale
 		// 1. Draw the static orbit path
 		for theta := 0.0; theta < math.Pi*2; theta += thetaStep {
 			x := centerX + math.Cos(theta)*radiusX
@@ -70,8 +69,8 @@ func DrawOrbit() string {
 	}
 
 	for _, p := range planetDistances {
-		radiusX := p * brailleScale
-		radiusY := p * yCompression * brailleScale
+		radiusX := p * scale
+		radiusY := p * yCompression * scale
 
 		// Exact planet coordinates on the orbit according to angle
 		brailleX := centerX + math.Cos(0)*radiusX
