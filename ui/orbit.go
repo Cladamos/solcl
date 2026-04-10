@@ -10,10 +10,10 @@ import (
 
 // Real AU Distance: {0.39, 0.72, 1.0, 1.52, 5.2, 9.5, 19.2, 30.1}
 var planetDistances = []float64{
-	10.0,  //Mercury
-	20.0,  //Venus
-	30.0,  //Earth
-	45.0,  //Mars
+	17.0,  //Mercury
+	28.0,  //Venus
+	38.0,  //Earth
+	53.0,  //Mars
 	70.0,  //Jupiter
 	78.0,  //Saturn
 	86.0,  //Uranus
@@ -26,30 +26,45 @@ var yCompression = 0.55
 
 // Norman scale is 100x(100*(yCompression))
 
+func drawCircle(canvas *drawille.Canvas, centerX, centerY, distance, scale float64, isSun bool) {
+	thetaStep := 0.01
+	radiusX := distance * scale
+	radiusY := distance * yCompression * scale
+	if isSun {
+		radiusY = radiusX
+	}
+	for theta := 0.0; theta < math.Pi*2; theta += thetaStep {
+		x := centerX + math.Cos(theta)*radiusX
+		y := centerY + math.Sin(theta)*radiusY
+		canvas.Set(int(x), int(y))
+	}
+}
+
 func DrawOrbit(scale float64) string {
 	canvas := drawille.NewCanvas()
 	furthestPlanet := planetDistances[len(planetDistances)-1]
 	width := int(furthestPlanet * scale * 2)
 	height := int(furthestPlanet * yCompression * scale * 2)
 
-	// All sides
 	terminalPadding := 2
 	terminalWidth := width/2 + terminalPadding*2
 	terminalHeight := height/4 + terminalPadding*2
 	centerX, centerY := float64(width)/2, float64(height)/2
 
-	thetaStep := 0.005
-
 	for _, p := range planetDistances {
-		radiusX := p * scale
-		radiusY := p * yCompression * scale
-		// 1. Draw the static orbit path
-		for theta := 0.0; theta < math.Pi*2; theta += thetaStep {
-			x := centerX + math.Cos(theta)*radiusX
-			y := centerY + math.Sin(theta)*radiusY
-			canvas.Set(int(x), int(y))
-		}
+		drawCircle(&canvas, centerX, centerY, p, scale, false)
 	}
+
+	sunRadius := 3.0
+	for radius := sunRadius; radius > 0; radius -= 0.5 {
+		drawCircle(&canvas, centerX, centerY, radius, scale, true)
+	}
+
+	sunBrailleRadius := sunRadius * scale
+	sunTermMaxX := int(centerX+sunBrailleRadius) / 2
+	sunTermMinX := int(centerX-sunBrailleRadius) / 2
+	sunTermMinY := int(centerY-sunBrailleRadius) / 4
+	sunTermMaxY := int(centerY+sunBrailleRadius) / 4
 
 	buffer := make([][]string, terminalHeight)
 	for y := 0; y < terminalHeight; y++ {
@@ -60,11 +75,23 @@ func DrawOrbit(scale float64) string {
 	}
 
 	grayStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("8"))
+	yellowStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("11"))
+
 	lines := strings.Split(canvas.String(), "\n")
 	for y, line := range lines {
 		chars := strings.Split(line, "")
 		for x, char := range chars {
-			buffer[y+terminalPadding][x+terminalPadding] = grayStyle.Render(char)
+			bufY := y + terminalPadding
+			bufX := x + terminalPadding
+			if bufY >= terminalHeight || bufX >= terminalWidth {
+				continue
+			}
+
+			if x >= sunTermMinX && x <= sunTermMaxX && y >= sunTermMinY && y <= sunTermMaxY {
+				buffer[bufY][bufX] = yellowStyle.Render(char)
+			} else {
+				buffer[bufY][bufX] = grayStyle.Render(char)
+			}
 		}
 	}
 
@@ -79,8 +106,9 @@ func DrawOrbit(scale float64) string {
 		termY := int(brailleY) / 4
 
 		style := lipgloss.NewStyle().Foreground(lipgloss.Color("208"))
-
-		buffer[termY+terminalPadding][termX+terminalPadding] = style.Render("●")
+		if p != planetDistances[0] {
+			buffer[termY+terminalPadding][termX+terminalPadding] = style.Render("●")
+		}
 	}
 
 	var finalOutput strings.Builder
