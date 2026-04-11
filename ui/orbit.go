@@ -10,7 +10,7 @@ import (
 
 // It scales the y-axis ratio 1 means perfect circles it gets wider with compression
 // I suggest using around 0.4-0.7
-var yCompression = 0.55
+var yCompression = 0.65
 
 // Norman scale is 100x(100*(yCompression))
 
@@ -31,8 +31,8 @@ func drawCircle(canvas *drawille.Canvas, centerX, centerY, distance, scale float
 func DrawOrbit(scale float64) string {
 	canvas := drawille.NewCanvas()
 	furthestPlanet := planets[len(planets)-1]
-	width := int(furthestPlanet.distance * scale * 2)
-	height := int(furthestPlanet.distance * yCompression * scale * 2)
+	width := int(furthestPlanet.orbitRadius * scale * 2)
+	height := int(furthestPlanet.orbitRadius * yCompression * scale * 2)
 
 	terminalPadding := 2
 	terminalWidth := width/2 + terminalPadding*2
@@ -40,7 +40,7 @@ func DrawOrbit(scale float64) string {
 	centerX, centerY := float64(width)/2, float64(height)/2
 
 	for _, p := range planets {
-		drawCircle(&canvas, centerX, centerY, p.distance, scale, false)
+		drawCircle(&canvas, centerX, centerY, p.orbitRadius, scale, false)
 	}
 
 	sunRadius := 3.0
@@ -62,7 +62,7 @@ func DrawOrbit(scale float64) string {
 		}
 	}
 
-	grayStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("8"))
+	grayStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("0"))
 	yellowStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("11"))
 
 	lines := strings.Split(canvas.String(), "\n")
@@ -83,13 +83,14 @@ func DrawOrbit(scale float64) string {
 		}
 	}
 
-	for _, p := range planets {
-		radiusX := p.distance * scale
-		radiusY := p.distance * yCompression * scale
+	for i, p := range planets {
+		radiusX := p.orbitRadius * scale
+		radiusY := p.orbitRadius * yCompression * scale
 
 		// Exact planet coordinates on the orbit according to angle
-		brailleX := centerX + math.Cos(0)*radiusX
-		brailleY := centerY + math.Sin(0)*radiusY
+		angle := planetAngles[i]
+		brailleX := centerX + math.Cos(angle)*radiusX
+		brailleY := centerY + math.Sin(angle)*radiusY
 		termX := int(brailleX) / 2
 		termY := int(brailleY) / 4
 

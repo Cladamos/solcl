@@ -94,11 +94,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) View() tea.View {
 	orbits := ui.DrawOrbit(m.scale)
+	info := lipgloss.NewStyle().Foreground(lipgloss.Color("#4A4A4A")).Render("Ecliptic North (top-down) - Vernal equinox (right)")
 	app := lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, orbits)
 
 	if !m.isHelpHidden {
 		helpView := m.help.View(m.keys)
-		joined := lipgloss.JoinVertical(lipgloss.Center, orbits, helpView)
+		joined := lipgloss.JoinVertical(lipgloss.Center, orbits, info, helpView)
 		app = lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, joined)
 	}
 
