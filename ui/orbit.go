@@ -8,18 +8,6 @@ import (
 	drawille "github.com/exrook/drawille-go"
 )
 
-// Real AU Distance: {0.39, 0.72, 1.0, 1.52, 5.2, 9.5, 19.2, 30.1}
-var planetDistances = []float64{
-	17.0,  //Mercury
-	28.0,  //Venus
-	38.0,  //Earth
-	53.0,  //Mars
-	70.0,  //Jupiter
-	78.0,  //Saturn
-	86.0,  //Uranus
-	100.0, //Neptune
-}
-
 // It scales the y-axis ratio 1 means perfect circles it gets wider with compression
 // I suggest using around 0.4-0.7
 var yCompression = 0.55
@@ -42,17 +30,17 @@ func drawCircle(canvas *drawille.Canvas, centerX, centerY, distance, scale float
 
 func DrawOrbit(scale float64) string {
 	canvas := drawille.NewCanvas()
-	furthestPlanet := planetDistances[len(planetDistances)-1]
-	width := int(furthestPlanet * scale * 2)
-	height := int(furthestPlanet * yCompression * scale * 2)
+	furthestPlanet := planets[len(planets)-1]
+	width := int(furthestPlanet.distance * scale * 2)
+	height := int(furthestPlanet.distance * yCompression * scale * 2)
 
 	terminalPadding := 2
 	terminalWidth := width/2 + terminalPadding*2
 	terminalHeight := height/4 + terminalPadding*2
 	centerX, centerY := float64(width)/2, float64(height)/2
 
-	for _, p := range planetDistances {
-		drawCircle(&canvas, centerX, centerY, p, scale, false)
+	for _, p := range planets {
+		drawCircle(&canvas, centerX, centerY, p.distance, scale, false)
 	}
 
 	sunRadius := 3.0
@@ -95,9 +83,9 @@ func DrawOrbit(scale float64) string {
 		}
 	}
 
-	for _, p := range planetDistances {
-		radiusX := p * scale
-		radiusY := p * yCompression * scale
+	for _, p := range planets {
+		radiusX := p.distance * scale
+		radiusY := p.distance * yCompression * scale
 
 		// Exact planet coordinates on the orbit according to angle
 		brailleX := centerX + math.Cos(0)*radiusX
@@ -105,10 +93,8 @@ func DrawOrbit(scale float64) string {
 		termX := int(brailleX) / 2
 		termY := int(brailleY) / 4
 
-		style := lipgloss.NewStyle().Foreground(lipgloss.Color("208"))
-		if p != planetDistances[0] {
-			buffer[termY+terminalPadding][termX+terminalPadding] = style.Render("●")
-		}
+		style := lipgloss.NewStyle().Foreground(p.color)
+		buffer[termY+terminalPadding][termX+terminalPadding] = style.Render("●")
 	}
 
 	var finalOutput strings.Builder
