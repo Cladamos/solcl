@@ -10,12 +10,15 @@ import (
 
 // It scales the y-axis ratio 1 means perfect circles it gets wider with compression
 // I suggest using around 0.4-0.7
-var yCompression = 0.65
+var yCompression = 0.6
 
 // Norman scale is 100x(100*(yCompression))
 
 func drawCircle(canvas *drawille.Canvas, centerX, centerY, distance, scale float64, isSun bool) {
 	thetaStep := 0.01
+	if scale > 1 {
+		thetaStep = 0.005
+	}
 	radiusX := distance * scale
 	radiusY := distance * yCompression * scale
 	if isSun {
@@ -34,7 +37,7 @@ func DrawOrbit(scale float64) string {
 	width := int(furthestPlanet.orbitRadius * scale * 2)
 	height := int(furthestPlanet.orbitRadius * yCompression * scale * 2)
 
-	terminalPadding := 2
+	terminalPadding := 1
 	terminalWidth := width/2 + terminalPadding*2
 	terminalHeight := height/4 + terminalPadding*2
 	centerX, centerY := float64(width)/2, float64(height)/2

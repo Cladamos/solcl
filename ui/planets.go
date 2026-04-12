@@ -35,10 +35,10 @@ var planets = []planet{
 
 var planetAngles []float64
 
-func CalculatePlanetAngles() {
+func CalculatePlanetAngles(currentTime time.Time) {
 	planetAngles = []float64{}
 	referenceDate := time.Date(2000, 1, 1, 12, 0, 0, 0, time.UTC)
-	daysSinceReference := time.Since(referenceDate).Hours() / 24
+	daysSinceReference := currentTime.Sub(referenceDate).Hours() / 24
 
 	for _, p := range planets {
 		startRad := p.startAngle * math.Pi / 180
