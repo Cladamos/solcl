@@ -1,4 +1,4 @@
-module solcl
+module github.com/cladamos/solcl
 
 go 1.25.0
 

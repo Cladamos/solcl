@@ -1,8 +1,9 @@
 package model
 
 import (
-	"solcl/ui"
 	"time"
+
+	"github.com/cladamos/solcl/ui"
 
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"

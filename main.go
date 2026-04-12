@@ -1,7 +1,7 @@
 package main
 
 import (
-	"solcl/model"
+	"github.com/cladamos/solcl/model"
 
 	tea "charm.land/bubbletea/v2"
 )
