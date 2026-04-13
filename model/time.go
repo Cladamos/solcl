@@ -9,17 +9,24 @@ import (
 type tickMsg struct {
 }
 
-type moveTimeMsg struct {
-	time time.Time
+type speed struct {
+	name  string
+	t     time.Duration
+	index int
 }
 
-func tickEveryHour() tea.Cmd {
-	return tea.Tick(time.Hour, func(_ time.Time) tea.Msg {
+var speeds = []speed{
+	{"1s / s", time.Second, 0},
+	{"1m / s", time.Minute, 1},
+	{"1h / s", time.Hour, 2},
+	{"1d / s", time.Hour * 24, 3},
+	{"1w / s", time.Hour * 24 * 7, 4},
+	{"1mo / s", time.Hour * 24 * 30, 5},
+	{"1y / s", time.Hour * 24 * 365, 6},
+}
+
+func tickTime() tea.Cmd {
+	return tea.Tick(time.Second, func(_ time.Time) tea.Msg {
 		return tickMsg{}
 	})
-}
-
-func moveTime(currentTime time.Time, amount time.Duration) tea.Msg {
-	newTime := currentTime.Add(amount)
-	return moveTimeMsg{time: newTime}
 }

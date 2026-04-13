@@ -26,9 +26,11 @@ solcl
 - `+` or `↑`: Zoom in
 - `-` or `↓`: Zoom out
 - `h`: Hide help
+- `H`: Hide all
 - `r`: Reset time
-- `→`: Move time forward
-- `←`: Move time backward
+- `s`: Edit speed
+- `→`: Warp forward / Increase speed
+- `←`: Warp backward / Decrease speed
 
 ## Note
 The planet locations in this project were **manually calculated for learning purposes**. 
