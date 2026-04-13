@@ -2,7 +2,7 @@
 
 A terminal based solar system viewer written in Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea)
 
-![solcl](assets/solcl.gif)
+![solcl](assets/solclNoOpacity.gif)
 
 ## Installation
 
