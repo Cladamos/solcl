@@ -1,16 +1,27 @@
 # solcl
 
+
 A terminal based solar system viewer written in Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea)
 
 ![solcl](assets/solclNoOpacity.gif)
 
 ## Installation
 
+### Arch Linux
+You can install `solcl` from the [AUR](https://aur.archlinux.org/packages/solcl) using your favorite AUR helper. Thanks to [stickynotememo](https://github.com/stickynotememo) for publishing the package.
+
+```bash
+yay -S solcl
+```
+
+### Go Install
+
 ```bash
 go install github.com/cladamos/solcl@latest
 ```
 
 If the command isn't recognized after installation, ensure your Go bin folder is in your PATH
+
 
 ## Usage
 
